@@ -67,26 +67,3 @@ class Tarjan:
                     break
             
             self.sccs.append(scc)
-
-
-# Przykład użycia
-if __name__ == "__main__":
-    # Przykładowy graf
-    graph = {
-        0: [1],
-        1: [2],
-        2: [0, 3],
-        3: [1, 4],
-        4: [2, 5],
-        5: [5, 6],
-        6: [5, 7],
-        7: [6, 8],
-        8: [7, 3]
-    }
-    
-    tarjan = Tarjan(graph)
-    sccs = tarjan.stronglyConnectedComponents()
-    
-    print("Silnie spójne składowe:")
-    for i, scc in enumerate(sccs):
-        print(f"SCC {i+1}: {scc}")
