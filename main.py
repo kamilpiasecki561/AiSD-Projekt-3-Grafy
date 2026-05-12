@@ -1,27 +1,12 @@
-#   Uruchomienie (obie formy flag, jak w poleceniu):
-#   python main.py -generate         albo    python main.py --generate
-#   python main.py -user-provided    albo    python main.py --user-provided
-#
-#   Heredoc (bash), przyklad:
-#   python main.py --user-provided << EOF
-#   4
-#   2
-#
-#   2
-#   2 3
-#   EOF
-
 import sys
-
 import tryb_generowania
 import tryb_od_uzytkownika
 
-
-def glowna():
+def main():
     if len(sys.argv) < 2:
         print(
-            "Uzycie: python main.py -generate | --generate  "
-            "LUB  python main.py -user-provided | --user-provided",
+            "Uzycie: python3 main.py -generate          --generate  \n"
+            "LUB     python3 main.py -user-provided     --user-provided \n",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -39,6 +24,5 @@ def glowna():
         )
         sys.exit(1)
 
-
 if __name__ == "__main__":
-    glowna()
+    main()

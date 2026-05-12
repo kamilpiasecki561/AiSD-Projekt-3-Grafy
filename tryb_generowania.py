@@ -1,10 +1,6 @@
-"""Tryb -generate / --generate: losowy spojny DAG z zadanym nasyceniem."""
-
 import random
 import sys
-
 import wspolne
-
 
 def wczytaj_nasycenie_procent(zacheta):
     while True:
@@ -13,13 +9,12 @@ def wczytaj_nasycenie_procent(zacheta):
         try:
             procent = int(linia)
             if procent < 0 or procent > 100:
-                print("Nasycenie musi byc liczba calkowita od 0 do 100.", file=sys.stderr)
+                print("Nasycenie musi byc liczba calkowita od 0 do 100", file=sys.stderr)
             else:
                 ulamek = procent / 100.0
                 return ulamek
         except ValueError:
             print("To nie jest poprawna liczba calkowita, sprobuj jeszcze raz", file=sys.stderr)
-
 
 def czy_krawedz_juz_jest(lista_krawedzi, skad, dokad):
     for i in range(len(lista_krawedzi)):
@@ -30,7 +25,6 @@ def czy_krawedz_juz_jest(lista_krawedzi, skad, dokad):
             return True
     return False
 
-
 def zrob_liste_wszystkich_mozliwych_krawedzi_w_gornym_trojkacie(liczba_wierzcholkow):
     wynik = []
     for skad in range(liczba_wierzcholkow):
@@ -38,7 +32,6 @@ def zrob_liste_wszystkich_mozliwych_krawedzi_w_gornym_trojkacie(liczba_wierzchol
             para = [skad, dokad]
             wynik.append(para)
     return wynik
-
 
 def wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie):
     if liczba_wierzcholkow <= 0:
@@ -101,12 +94,12 @@ def wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie):
 
     return lista_nastepnikow
 
-
 def uruchom_tryb_generowania():
+    typ = wspolne.wczytaj_typ_reprezentacji()
     liczba_wierzcholkow = wspolne.wczytaj_calkowita("nodes> ")
     if liczba_wierzcholkow == 0:
         print("Graf pusty — koniec.", file=sys.stderr)
         return
     nasycenie = wczytaj_nasycenie_procent("saturation> ")
     lista_nastepnikow = wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie)
-    wspolne.wypisz_graf(lista_nastepnikow)
+    wspolne.petla_operacji(lista_nastepnikow, typ)
