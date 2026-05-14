@@ -1,4 +1,6 @@
 import sys
+import dfs_tarjan
+import bfs_kahn
 
 def wczytaj_typ_reprezentacji():
     while True:
@@ -84,6 +86,8 @@ def wypisz_graf(lista_nastepnikow, typ_reprezentacji):
     print("")
 
 def petla_operacji(lista_nastepnikow, typ_reprezentacji):
+    """Główna pętla obsługująca interaktywne polecenia na grafie."""
+    n = len(lista_nastepnikow)
     while True:
         try:
             akcja = input("action> ").strip().lower()
@@ -96,19 +100,38 @@ def petla_operacji(lista_nastepnikow, typ_reprezentacji):
         elif akcja == "find":
             skad = wczytaj_calkowita("from> ")
             dokad = wczytaj_calkowita("to> ")
-            
-            n = len(lista_nastepnikow)
             if skad < 1 or skad > n or dokad < 1 or dokad > n:
-                print(f"Falsz: krawedz ({skad},{dokad}) nie istnieje w grafie")
+                print(f"Falsz: wezel ({skad},{dokad}) nie istnieje w grafie")
             else:
                 if (dokad - 1) in lista_nastepnikow[skad - 1]:
-                    print(f"Prawda: krawedz ({skad},{dokad}) istnieje w grafie")
+                    print(f"Prawda: wezel ({skad},{dokad}) istnieje w grafie")
                 else:
-                    print(f"Falsz: krawedz ({skad},{dokad}) nie istnieje w grafie")
+                    print(f"Falsz: wezel ({skad},{dokad}) nie istnieje w grafie")
                     
+        elif akcja == "bfs":
+            start = wczytaj_calkowita("start_node> ")
+            if 1 <= start <= n:
+                bfs_kahn.uruchom_bfs(lista_nastepnikow, start - 1)
+            else:
+                print(f"Węzeł {start} nie istnieje!")
+
+        elif akcja == "dfs":
+            start = wczytaj_calkowita("start_node> ")
+            if 1 <= start <= n:
+                dfs_tarjan.uruchom_dfs(lista_nastepnikow, start - 1)
+            else:
+                print(f"Węzeł {start} nie istnieje!")
+
+        elif akcja == "kahn":
+            bfs_kahn.sortowanie_kahna(lista_nastepnikow)
+
+        elif akcja == "tarjan":
+            dfs_tarjan.sortowanie_tarjana(lista_nastepnikow)
+
         elif akcja in ["exit", "quit", "q"]:
+            print("Koniec programu.")
             break
         elif akcja == "":
             continue
         else:
-            print("Nieznana akcja. Dostępne: Print, find, exit")
+            print("Nieznana akcja. Dostępne: print, find, bfs, dfs, kahn, tarjan, exit")
