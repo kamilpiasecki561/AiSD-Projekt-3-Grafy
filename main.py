@@ -1,5 +1,6 @@
 import sys
 from utilsy.generator import wygeneruj_graf
+from utilsy.podawanie_grafu import reczne_podawanie_grafu
 
 def main():
     if len(sys.argv) < 2:
@@ -15,8 +16,9 @@ def main():
     if tryb == "-generate" or tryb == "--generate":
         graf = wygeneruj_graf()
         print(graf)
-#    elif tryb == "-user-provided" or tryb == "--user-provided":
-#        tryb_od_uzytkownika.uruchom_tryb_od_uzytkownika()
+    elif tryb == "-user-provided" or tryb == "--user-provided":
+        reczne_podawanie_grafu()
+        print(graf)
     else:
         print(
             "Nieznany argument. Uzyj -generate / --generate albo -user-provided / --user-provided.",
