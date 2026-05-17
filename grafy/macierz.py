@@ -18,6 +18,9 @@ class MatrixGraph(Graph):
 
         return result
 
+    def add_edge(self, u, v):
+        self.matrix[u][v] = 1
+
     def has_edge(self, u, v):
         return self.matrix[u][v] == 1
 

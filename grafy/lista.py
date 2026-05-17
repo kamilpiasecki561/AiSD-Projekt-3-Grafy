@@ -12,6 +12,10 @@ class ListGraph(Graph):
     def neighbors(self, v):
         return self.adj[v]
 
+    def add_edge(self, u, v):
+        self.adj[u].append(v)
+        self.adj[u].sort()
+
     def has_edge(self, u, v):
         return v in self.adj[u]
 

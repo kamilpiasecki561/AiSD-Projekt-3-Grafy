@@ -18,6 +18,9 @@ class EdgeTableGraph(Graph):
 
         return result
 
+    def add_edge(self, u, v):
+        self.edges.append((u, v))
+
     def has_edge(self, u, v):
         return (u, v) in self.edges
 

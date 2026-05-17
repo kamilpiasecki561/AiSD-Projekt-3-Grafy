@@ -7,6 +7,10 @@ class Graph(ABC):
         pass
 
     @abstractmethod
+    def add_edge(self, u, v):
+        pass
+
+    @abstractmethod
     def has_edge(self, u, v):
         pass
 

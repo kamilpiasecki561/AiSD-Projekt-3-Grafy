@@ -94,14 +94,11 @@ def przenies_do_grafu():
         graf = ListGraph(liczba_wierzcholkow)
     elif typ == 'table':
         graf = EdgeTableGraph(liczba_wierzcholkow)
-    else:
-        print("Nieznany typ reprezentacji", file=sys.stderr)
-        sys.exit(1)
 
     for i in range(len(lista_nastepnikow)):
         nastepnik = lista_nastepnikow[i]
         for j in range(len(nastepnik)):
             dokad = nastepnik[j]
-            graf.has_edge(i, dokad)
+            graf.add_edge(i, dokad)
 
     return graf
