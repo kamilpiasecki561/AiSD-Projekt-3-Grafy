@@ -86,7 +86,7 @@ def uruchom_tryb_generowania():
     lista_nastepnikow = wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie)
     return typ, lista_nastepnikow, liczba_wierzcholkow
 
-def przenies_do_grafu():
+def wygeneruj_graf():
     typ, lista_nastepnikow, liczba_wierzcholkow = uruchom_tryb_generowania()
     if typ == 'matrix':
         graf = MatrixGraph(liczba_wierzcholkow)

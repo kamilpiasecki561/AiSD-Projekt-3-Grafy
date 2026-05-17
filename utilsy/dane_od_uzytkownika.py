@@ -1,15 +1,6 @@
 import sys
 
-def wczytaj_typ_reprezentacji():
-    while True:
-        try:
-            typ = input("type> ").strip().lower()
-            if typ in ['matrix', 'list', 'table']:
-                return typ
-            else:
-                print("Dozwolone typy to: 'matrix', 'list', 'table'. Spróbuj jeszcze raz", file=sys.stderr)
-        except EOFError:
-            sys.exit(0)
+#UNIWERSALNA
 
 def wczytaj_calkowita():
     while True:
@@ -23,6 +14,20 @@ def wczytaj_calkowita():
                 return wartosc
         except ValueError:
             print("To nie jest poprawna liczba całkowita, spróbuj jeszcze raz", file=sys.stderr)
+        except EOFError:
+            sys.exit(0)
+
+
+#GENEROWANIE
+
+def wczytaj_typ_reprezentacji():
+    while True:
+        try:
+            typ = input("type> ").strip().lower()
+            if typ in ['matrix', 'list', 'table']:
+                return typ
+            else:
+                print("Dozwolone typy to: 'matrix', 'list', 'table'. Spróbuj jeszcze raz", file=sys.stderr)
         except EOFError:
             sys.exit(0)
 
@@ -50,3 +55,4 @@ def dane_do_uruchomienia():
         return
     nasycenie = wczytaj_nasycenie_procent()
     return typ, liczba_wierzcholkow, nasycenie
+

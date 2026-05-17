@@ -29,7 +29,7 @@ class MatrixGraph(Graph):
     
     def __str__(self):
         result = ""
-
+        
         for i in range(self.n):
             for j in range(self.n):
                 result += str(self.matrix[i][j]) + " "

@@ -1,6 +1,5 @@
 import sys
-from utilsy.dane_od_uzytkownika import dane_do_uruchomienia
-from utilsy.generator import przenies_do_grafu
+from utilsy.generator import wygeneruj_graf
 
 def main():
     if len(sys.argv) < 2:
@@ -14,7 +13,7 @@ def main():
     tryb = sys.argv[1]
 
     if tryb == "-generate" or tryb == "--generate":
-        graf = przenies_do_grafu()
+        graf = wygeneruj_graf()
         print(graf)
 #    elif tryb == "-user-provided" or tryb == "--user-provided":
 #        tryb_od_uzytkownika.uruchom_tryb_od_uzytkownika()

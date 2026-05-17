@@ -31,6 +31,6 @@ class EdgeTableGraph(Graph):
         result = ""
 
         for u, v in self.edges:
-            result += f"{u} -> {v}\n"
+            result += f"{u + 1} -> {v + 1}\n"
 
         return result

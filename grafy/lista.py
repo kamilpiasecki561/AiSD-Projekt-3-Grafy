@@ -26,6 +26,6 @@ class ListGraph(Graph):
         result = ""
 
         for i in range(self.n):
-            result += str(i) + ": " + str(self.adj[i]) + "\n"
+            result += str(i + 1) + ": " + str([v + 1 for v in self.adj[i]]) + "\n"
 
         return result
