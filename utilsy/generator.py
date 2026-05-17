@@ -1,20 +1,9 @@
 import random
 import sys
-import wspolne
-
-def wczytaj_nasycenie_procent(zacheta):
-    while True:
-        linia = input(zacheta)
-        linia = linia.strip()
-        try:
-            procent = int(linia)
-            if procent < 0 or procent > 100:
-                print("Nasycenie musi byc liczba calkowita od 0 do 100", file=sys.stderr)
-            else:
-                ulamek = procent / 100.0
-                return ulamek
-        except ValueError:
-            print("To nie jest poprawna liczba calkowita, sprobuj jeszcze raz", file=sys.stderr)
+from utilsy.dane_od_uzytkownika import dane_do_uruchomienia
+from grafy.macierz import MatrixGraph
+from grafy.lista import ListGraph
+from grafy.tablica import EdgeTableGraph
 
 def czy_krawedz_juz_jest(lista_krawedzi, skad, dokad):
     for i in range(len(lista_krawedzi)):
@@ -43,9 +32,7 @@ def wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie):
         graf_pusty.append([])
         return graf_pusty
 
-    wszystkie_mozliwe = zrob_liste_wszystkich_mozliwych_krawedzi_w_gornym_trojkacie(
-        liczba_wierzcholkow
-    )
+    wszystkie_mozliwe = zrob_liste_wszystkich_mozliwych_krawedzi_w_gornym_trojkacie(liczba_wierzcholkow)
     ile_mozna_max = len(wszystkie_mozliwe)
 
     wybrane_krawedzie = []
@@ -95,11 +82,26 @@ def wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie):
     return lista_nastepnikow
 
 def uruchom_tryb_generowania():
-    typ = wspolne.wczytaj_typ_reprezentacji()
-    liczba_wierzcholkow = wspolne.wczytaj_calkowita("nodes> ")
-    if liczba_wierzcholkow == 0:
-        print("Graf pusty — koniec.", file=sys.stderr)
-        return
-    nasycenie = wczytaj_nasycenie_procent("saturation> ")
+    typ, liczba_wierzcholkow, nasycenie = dane_do_uruchomienia()
     lista_nastepnikow = wygeneruj_spojny_dag(liczba_wierzcholkow, nasycenie)
-    wspolne.petla_operacji(lista_nastepnikow, typ)
+    return typ, lista_nastepnikow, liczba_wierzcholkow
+
+def przenies_do_grafu():
+    typ, lista_nastepnikow, liczba_wierzcholkow = uruchom_tryb_generowania()
+    if typ == 'matrix':
+        graf = MatrixGraph(liczba_wierzcholkow)
+    elif typ == 'list':
+        graf = ListGraph(liczba_wierzcholkow)
+    elif typ == 'table':
+        graf = EdgeTableGraph(liczba_wierzcholkow)
+    else:
+        print("Nieznany typ reprezentacji", file=sys.stderr)
+        sys.exit(1)
+
+    for i in range(len(lista_nastepnikow)):
+        nastepnik = lista_nastepnikow[i]
+        for j in range(len(nastepnik)):
+            dokad = nastepnik[j]
+            graf.has_edge(i, dokad)
+
+    return graf

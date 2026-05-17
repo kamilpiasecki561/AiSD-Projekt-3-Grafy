@@ -1,4 +1,4 @@
-from graf import Graph
+from grafy.graf import Graph
 
 # n - liczba wierzchołków
 # u, v - wierzchołki
