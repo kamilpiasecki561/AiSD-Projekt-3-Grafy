@@ -28,66 +28,70 @@ def wczytaj_calkowita(zacheta):
         except EOFError:
             sys.exit(0)
 
-def zbuduj_macierz_sasiedztwa(lista_nastepnikow):
+def konwertuj_na_strukture(lista_nastepnikow, typ):
     n = len(lista_nastepnikow)
-    macierz = []
-    for wiersz_nr in range(n):
-        wiersz = []
-        for kolumna_nr in range(n):
-            wiersz.append(0)
-        macierz.append(wiersz)
-
-    for skad in range(n):
-        nastepnicy = lista_nastepnikow[skad]
-        for i in range(len(nastepnicy)):
-            dokad = nastepnicy[i]
-            if dokad >= 0 and dokad < n:
+    if typ == 'list':
+        return lista_nastepnikow
+    elif typ == 'matrix':
+        macierz = [[0] * n for _ in range(n)]
+        for skad in range(n):
+            for dokad in lista_nastepnikow[skad]:
                 macierz[skad][dokad] = 1
-    return macierz
+        return macierz
+    elif typ == 'table':
+        tabela = []
+        for skad in range(n):
+            for dokad in lista_nastepnikow[skad]:
+                tabela.append((skad, dokad))
+        return tabela
 
-def wypisz_graf(lista_nastepnikow, typ_reprezentacji):
-    n = len(lista_nastepnikow)
+def pobierz_sasiadow(graf, typ, wezel, n):
+    if typ == 'list':
+        return graf[wezel]
+    elif typ == 'matrix':
+        return [i for i in range(n) if graf[wezel][i] == 1]
+    elif typ == 'table':
+        return [krawedz[1] for krawedz in graf if krawedz[0] == wezel]
+
+def wypisz_graf(graf, typ, n):
     print("")
-    
-    if typ_reprezentacji == 'list':
+    if typ == 'list':
         print("--- Lista nastepnikow ---")
         for i in range(n):
-            etykieta = i + 1
-            nastepnicy = lista_nastepnikow[i]
-            if len(nastepnicy) == 0:
-                print(f"  {etykieta} -> (brak)")
+            sasiedzi = graf[i]
+            if len(sasiedzi) == 0:
+                print(f"  {i+1} -> (brak)")
             else:
-                tekst = ", ".join([str(x + 1) for x in nastepnicy])
-                print(f"  {etykieta} -> {tekst}")
-                
-    elif typ_reprezentacji == 'matrix':
+                print(f"  {i+1} -> {', '.join(str(x+1) for x in sasiedzi)}")
+    elif typ == 'matrix':
         print("--- Macierz sasiedztwa ---")
-        macierz = zbuduj_macierz_sasiedztwa(lista_nastepnikow)
         naglowek = "    " + "".join([str(x + 1).rjust(4) for x in range(n)])
         print(naglowek)
-        for wiersz_nr in range(n):
-            etykieta_wiersza = wiersz_nr + 1
-            linia_wyjscia = str(etykieta_wiersza).rjust(3) + " "
-            for wartosc in macierz[wiersz_nr]:
-                linia_wyjscia += str(wartosc).rjust(4)
-            print(linia_wyjscia)
-            
-    elif typ_reprezentacji == 'table':
+        for i in range(n):
+            linia = str(i+1).rjust(3) + " "
+            for wartosc in graf[i]:
+                linia += str(wartosc).rjust(4)
+            print(linia)
+    elif typ == 'table':
         print("--- Tabela krawedzi ---")
         print("  Skąd | Dokąd")
         print("  -------------")
-        for i in range(n):
-            skad = i + 1
-            nastepnicy = lista_nastepnikow[i]
-            if not nastepnicy:
-                print(f"  {str(skad).rjust(4)} | -")
-            for dokad in nastepnicy:
-                print(f"  {str(skad).rjust(4)} | {dokad + 1}")
+        if len(graf) == 0:
+             print("  (brak krawedzi)")
+        else:
+            for krawedz in graf:
+                print(f"  {str(krawedz[0] + 1).rjust(4)} | {krawedz[1] + 1}")
     print("")
 
+
 def petla_operacji(lista_nastepnikow, typ_reprezentacji):
-    """Główna pętla obsługująca interaktywne polecenia na grafie."""
     n = len(lista_nastepnikow)
+    
+    graf = konwertuj_na_strukture(lista_nastepnikow, typ_reprezentacji)
+    
+    def sasiedzi(wezel):
+        return pobierz_sasiadow(graf, typ_reprezentacji, wezel, n)
+
     while True:
         try:
             akcja = input("action> ").strip().lower()
@@ -95,7 +99,7 @@ def petla_operacji(lista_nastepnikow, typ_reprezentacji):
             break
             
         if akcja == "print":
-            wypisz_graf(lista_nastepnikow, typ_reprezentacji)
+            wypisz_graf(graf, typ_reprezentacji, n)
             
         elif akcja == "find":
             skad = wczytaj_calkowita("from> ")
@@ -103,30 +107,30 @@ def petla_operacji(lista_nastepnikow, typ_reprezentacji):
             if skad < 1 or skad > n or dokad < 1 or dokad > n:
                 print(f"Falsz: wezel ({skad},{dokad}) nie istnieje w grafie")
             else:
-                if (dokad - 1) in lista_nastepnikow[skad - 1]:
-                    print(f"Prawda: wezel ({skad},{dokad}) istnieje w grafie")
+                if (dokad - 1) in sasiedzi(skad - 1):
+                    print(f"Prawda: krawedz ({skad},{dokad}) istnieje w grafie")
                 else:
-                    print(f"Falsz: wezel ({skad},{dokad}) nie istnieje w grafie")
+                    print(f"Falsz: krawedz ({skad},{dokad}) nie istnieje w grafie")
                     
         elif akcja == "bfs":
             start = wczytaj_calkowita("start_node> ")
             if 1 <= start <= n:
-                bfs_kahn.uruchom_bfs(lista_nastepnikow, start - 1)
+                bfs_kahn.uruchom_bfs(n, start - 1, sasiedzi)
             else:
                 print(f"Węzeł {start} nie istnieje!")
 
         elif akcja == "dfs":
             start = wczytaj_calkowita("start_node> ")
             if 1 <= start <= n:
-                dfs_tarjan.uruchom_dfs(lista_nastepnikow, start - 1)
+                dfs_tarjan.uruchom_dfs(n, start - 1, sasiedzi)
             else:
                 print(f"Węzeł {start} nie istnieje!")
 
         elif akcja == "kahn":
-            bfs_kahn.sortowanie_kahna(lista_nastepnikow)
+            bfs_kahn.sortowanie_kahna(n, sasiedzi)
 
         elif akcja == "tarjan":
-            dfs_tarjan.sortowanie_tarjana(lista_nastepnikow)
+            dfs_tarjan.sortowanie_tarjana(n, sasiedzi)
 
         elif akcja in ["exit", "quit", "q"]:
             print("Koniec programu.")

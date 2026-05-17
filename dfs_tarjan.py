@@ -1,5 +1,4 @@
-def uruchom_dfs(lista_nastepnikow, start):
-    # Przeszukiwanie w głąb (iteracyjnie, z użyciem stosu)
+def uruchom_dfs(n, start, sasiedzi_func):
     visited = set()
     stack = [start]
     wynik = []
@@ -9,19 +8,15 @@ def uruchom_dfs(lista_nastepnikow, start):
         if node not in visited:
             wynik.append(node)
             visited.add(node)
-            # Odwracamy sąsiadów, by odwiedzać od najmniejszego do największego
-            for neighbor in reversed(lista_nastepnikow[node]):
+            for neighbor in reversed(sasiedzi_func(node)):
                 if neighbor not in visited:
                     stack.append(neighbor)
                     
-    # Konwersja indeksowania od 0 do 1 dla użytkownika
     print(f"Kolejność odwiedzania DFS (od węzła {start + 1}): {[x + 1 for x in wynik]}")
     return wynik
 
 
-def sortowanie_tarjana(lista_nastepnikow):
-    # Implementacja Sortowania Topologicznego Tarjana z PDF (Znaczniki)
-    n = len(lista_nastepnikow)
+def sortowanie_tarjana(n, sasiedzi_func):
     if n == 0:
         print("Graf jest pusty!")
         return []
@@ -45,7 +40,7 @@ def sortowanie_tarjana(lista_nastepnikow):
             return
 
         marks[node] = TEMPORARY
-        for neighbor in lista_nastepnikow[node]:
+        for neighbor in sasiedzi_func(node):
             visit(neighbor)
 
         marks[node] = PERMANENT

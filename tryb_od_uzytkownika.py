@@ -11,8 +11,10 @@ def wczytaj_listy_nastepnikow(liczba_wierzcholkow):
             pusta = []
             lista_nastepnikow.append(pusta)
             continue
+            
         czesci = linia.split()
-        nastepnicy = []
+        nastepnicy_bez_duplikatow = set()
+        
         for j in range(len(czesci)):
             jeden_tekst = czesci[j]
             try:
@@ -21,15 +23,12 @@ def wczytaj_listy_nastepnikow(liczba_wierzcholkow):
                 print("Niepoprawna lista nastepnikow - uzyj liczb calkowitych", file=sys.stderr)
                 sys.exit(1)
             if numer_od_1 < 1 or numer_od_1 > liczba_wierzcholkow:
-                print(
-                    "Numer wierzcholka musi byc od 1 do "
-                    + str(liczba_wierzcholkow)
-                    + ".",
-                    file=sys.stderr,
-                )
+                print(f"Numer wierzcholka musi byc od 1 do {liczba_wierzcholkow}.", file=sys.stderr)
                 sys.exit(1)
-            nastepnicy.append(numer_od_1 - 1)
-        lista_nastepnikow.append(nastepnicy)
+                
+            nastepnicy_bez_duplikatow.add(numer_od_1 - 1)
+            
+        lista_nastepnikow.append(sorted(list(nastepnicy_bez_duplikatow)))
     return lista_nastepnikow
 
 def uruchom_tryb_od_uzytkownika():
