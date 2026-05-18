@@ -1,6 +1,7 @@
 import sys
 import dfs_tarjan
 import bfs_kahn
+import eksport_tikz
 
 def wczytaj_typ_reprezentacji():
     while True:
@@ -132,10 +133,13 @@ def petla_operacji(lista_nastepnikow, typ_reprezentacji):
         elif akcja == "tarjan":
             dfs_tarjan.sortowanie_tarjana(n, sasiedzi)
 
+        elif akcja == "tikz":
+            eksport_tikz.eksportuj_do_tikz(n, sasiedzi)
+
         elif akcja in ["exit", "quit", "q"]:
             print("Koniec programu.")
             break
         elif akcja == "":
             continue
         else:
-            print("Nieznana akcja. Dostępne: print, find, bfs, dfs, kahn, tarjan, exit")
+            print("Nieznana akcja. Dostępne: print, find, bfs, dfs, kahn, tarjan, tikz, exit")
